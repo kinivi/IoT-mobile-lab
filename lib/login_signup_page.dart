@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'authentication.dart';
 
 // ENUM for togling form mode
 enum FormMode { LOGIN, SIGNUP }
-
-// Get Firebase auth
-final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginSignUpPage extends StatefulWidget {
   LoginSignUpPage({this.auth, this.onSignedIn});
@@ -57,7 +52,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     return false;
   }
 
-   // Perform login or signup
+  // Perform login or signup
   void _validateAndSubmit() async {
     setState(() {
       _errorMessage = "";
@@ -77,10 +72,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+        if (userId.length > 0 &&
+            userId != null &&
+            _formMode == FormMode.LOGIN) {
           widget.onSignedIn();
         }
-
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -105,7 +101,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-
     //Get appropriate platform
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
@@ -131,10 +126,12 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             shrinkWrap: true,
             children: <Widget>[
               _showLogo(),
-              _formMode == FormMode.SIGNUP ? 
-              _showNameInput()  : SizedBox.shrink(),
-              _formMode == FormMode.SIGNUP ? 
-              _showPhoneInput()  : SizedBox.shrink(),
+              _formMode == FormMode.SIGNUP
+                  ? _showNameInput()
+                  : SizedBox.shrink(),
+              _formMode == FormMode.SIGNUP
+                  ? _showPhoneInput()
+                  : SizedBox.shrink(),
               _showEmailInput(),
               _showPasswordInput(),
               _showPrimaryButton(),
@@ -202,8 +199,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               color: Colors.grey,
             )),
         validator: (value) {
-          if(value.isEmpty) return 'Password can\'t be empty';
-          if(value.length < 8) return 'Password is too short';
+          if (value.isEmpty) return 'Password can\'t be empty';
+          if (value.length < 8) return 'Password is too short';
           return null;
         },
         onSaved: (value) => _password = value.trim(),
@@ -225,8 +222,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               color: Colors.grey,
             )),
         validator: (value) {
-          if(value.isEmpty) return 'Name can\'t be empty';
-          if(value.length < 1) return 'Name is too short';
+          if (value.isEmpty) return 'Name can\'t be empty';
+          if (value.length < 1) return 'Name is too short';
           return null;
         },
         onSaved: (value) => _password = value.trim(),
@@ -249,7 +246,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               color: Colors.grey,
             )),
         validator: (value) {
-          if(value.isEmpty) return 'Phone can\'t be empty';
+          if (value.isEmpty) return 'Phone can\'t be empty';
           return null;
         },
         onSaved: (value) => _password = value.trim(),

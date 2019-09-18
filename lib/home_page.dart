@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'authentication.dart';
 import 'login_signup_page.dart';
@@ -32,21 +31,10 @@ class _HomePageState extends State<HomePage> {
         if (user != null) {
           _userId = user.uid;
         } else {}
-
-        print("//");
-        print(authStatus);
-        print("" == _userId);
-        print("//");
-
         if (_userId == "" || _userId == null) {
           authStatus = AuthStatus.NOT_LOGGED_IN;
         } else
           authStatus = AuthStatus.LOGGED_IN;
-
-        print("//-//");
-        print(authStatus);
-        print(_userId);
-        print(_userName);
       });
     });
   }
@@ -82,11 +70,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(authStatus);
 
     switch (authStatus) {
       case AuthStatus.NOT_DETERMINED:
-        print(authStatus);
         return _buildWaitingScreen();
         break;
       case AuthStatus.NOT_LOGGED_IN:
