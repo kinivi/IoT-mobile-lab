@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'authentication.dart';
+import 'package:my_ios_app/styles.dart';
 
 // ENUM for togling form mode
 enum FormMode { LOGIN, SIGNUP }
@@ -52,6 +53,27 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     return false;
   }
 
+  // Get user ID depending on Form type
+  Future<String> _getUserId() async {
+    String userId = "";
+    if (_formMode == FormMode.LOGIN) {
+      userId = await widget.auth.signIn(_email, _password);
+      print('Signed in: $userId');
+    } else {
+      userId = await widget.auth.signUp(_email, _password);
+      print('Signed up user: $userId');
+    }
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+      widget.onSignedIn();
+    }
+
+    return userId;
+  }
+
   // Perform login or signup
   void _validateAndSubmit() async {
     setState(() {
@@ -61,22 +83,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     if (_validateAndSave()) {
       String userId = "";
       try {
-        if (_formMode == FormMode.LOGIN) {
-          userId = await widget.auth.signIn(_email, _password);
-          print('Signed in: $userId');
-        } else {
-          userId = await widget.auth.signUp(_email, _password);
-          print('Signed up user: $userId');
-        }
-        setState(() {
-          _isLoading = false;
-        });
-
-        if (userId.length > 0 &&
-            userId != null &&
-            _formMode == FormMode.LOGIN) {
-          widget.onSignedIn();
-        }
+        userId = await _getUserId();
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -102,7 +109,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   @override
   Widget build(BuildContext context) {
     //Get appropriate platform
-    _isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    //_isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
     return new Scaffold(
       appBar: new AppBar(
@@ -168,7 +175,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      padding: Styles.inputFormPadding,
       child: new TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
@@ -187,7 +194,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showPasswordInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      padding: Styles.inputFormPadding,
       child: new TextFormField(
         maxLines: 1,
         obscureText: true,
@@ -210,7 +217,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showNameInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      padding: Styles.inputFormPadding,
       child: new TextFormField(
         maxLines: 1,
         obscureText: false,
@@ -233,7 +240,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showPhoneInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      padding: Styles.inputFormPadding,
       child: new TextFormField(
         maxLines: 1,
         obscureText: false,
@@ -256,17 +263,15 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showPrimaryButton() {
     return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        padding: Styles.primaryButtonPadding,
         child: new MaterialButton(
           elevation: 5.0,
           minWidth: 200.0,
           height: 42.0,
           color: Colors.blue,
           child: _formMode == FormMode.LOGIN
-              ? new Text('Login',
-                  style: new TextStyle(fontSize: 20.0, color: Colors.white))
-              : new Text('Create account',
-                  style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+              ? new Text('Login', style: Styles.primaryText)
+              : new Text('Create account', style: Styles.primaryText),
           onPressed: _validateAndSubmit,
         ));
   }
@@ -274,11 +279,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   Widget _showSecondaryButton() {
     return new FlatButton(
       child: _formMode == FormMode.LOGIN
-          ? new Text('Create an account',
-              style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
-          : new Text('Have an account? Sign in',
-              style:
-                  new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+          ? new Text('Create an account', style: Styles.secondaryText)
+          : new Text('Have an account? Sign in', style: Styles.secondaryText),
       onPressed: _formMode == FormMode.LOGIN
           ? _changeFormToSignUp
           : _changeFormToLogin,
@@ -287,14 +289,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      return new Text(
-        _errorMessage,
-        style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
-      );
+      return new Text(_errorMessage, style: Styles.errorText);
     } else {
       return new Container(
         height: 0.0,

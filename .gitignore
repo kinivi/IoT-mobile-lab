@@ -95,3 +95,6 @@ Pods/
 .history
 
 # End of https://www.gitignore.io/api/dart,flutter,visualstudiocode
+ios/Flutter/Flutter.podspec
+
+.idea/
