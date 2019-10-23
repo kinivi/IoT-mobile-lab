@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'package:my_ios_app/widgets/workers_list.dart';
+import 'api/api.dart';
 import 'authentication.dart';
 import 'login_signup_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({this.auth});
+  HomePage({this.auth, this.api});
 
-  final BaseAuth auth;
+  final Auth auth;
+  final Api api;
 
   @override
   State<StatefulWidget> createState() => new _HomePageState();
@@ -71,6 +73,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
+    // widget.api.getTransports().then((results) => {
+    //   print(results.toJson())
+    // });
+
     switch (authStatus) {
       case AuthStatus.NOT_DETERMINED:
         return _buildWaitingScreen();
@@ -102,7 +108,8 @@ class _HomePageState extends State<HomePage> {
 
                 child: new Text("Sign Out"),
                 onPressed: _onSignedOut,
-              )
+              ),
+              workersList(widget.api)
             ]),
           );
         } else

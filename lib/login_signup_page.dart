@@ -7,7 +7,7 @@ enum FormMode { LOGIN, SIGNUP }
 
 class LoginSignUpPage extends StatefulWidget {
   LoginSignUpPage({this.auth, this.onSignedIn});
-  final BaseAuth auth;
+  final Auth auth;
   final VoidCallback onSignedIn;
 
   @override

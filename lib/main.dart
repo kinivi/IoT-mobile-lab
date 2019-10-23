@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_ios_app/api/api.dart';
 import 'authentication.dart';
 import 'home_page.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new HomePage(auth: new Auth())
+      home: new HomePage(auth: new FireAuth(), api: new SQLApi())
     );
   }
 }
