@@ -19,7 +19,7 @@ class SQLApi implements Api {
     final response = await http.get(api_url);
     return transportFromJson(response.body).data;
   }
-
+  
   Future<String> postTransport(Transport transport) async {
     return "";
   }

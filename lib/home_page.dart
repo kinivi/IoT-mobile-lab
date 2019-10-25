@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_ios_app/widgets/workers_list.dart';
 import 'api/api.dart';
+import 'api/worker.dart';
 import 'authentication.dart';
 import 'login_signup_page.dart';
+import './api/api.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({this.auth, this.api});
@@ -25,6 +27,27 @@ class _HomePageState extends State<HomePage> {
   String _userId = "";
   String _userName = "";
 
+  List<Worker> workers = [];
+  Future<Data> _futureData;
+
+  Future<Data> _updateList() async {
+    //Get data from
+    Future<Data> data = widget.api.getTransports();
+
+    return data;
+
+    // setState(() {
+    //   //workers = data.workers;
+    //   print(data.toJson());
+    // });
+  }
+
+  Future<void> refreshData() {
+    setState(() {
+      _futureData = _updateList();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +60,8 @@ class _HomePageState extends State<HomePage> {
           authStatus = AuthStatus.NOT_LOGGED_IN;
         } else
           authStatus = AuthStatus.LOGGED_IN;
+        // If user logged in, get api call for list request
+        _futureData = _updateList();
       });
     });
   }
@@ -72,11 +97,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    // widget.api.getTransports().then((results) => {
-    //   print(results.toJson())
-    // });
-
     switch (authStatus) {
       case AuthStatus.NOT_DETERMINED:
         return _buildWaitingScreen();
@@ -90,47 +110,60 @@ class _HomePageState extends State<HomePage> {
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
           return new Scaffold(
-            appBar: new AppBar(
-              title: new Text("Flutter login demo"),
-            ),
-            body: new ListView(
-              padding: EdgeInsets.all(16.0),
-              children: <Widget>[
-              _showBoy(),
-              new Text("uID: " + _userId),
-              new Padding(padding: new EdgeInsets.fromLTRB(0, 20, 0, 20),),
-              new MaterialButton(
-                elevation: 5.0,
-                minWidth: 100.0,
-                height: 50.0,
-                color: Colors.blue,
-                textColor: Colors.white,
-
-                child: new Text("Sign Out"),
-                onPressed: _onSignedOut,
+              appBar: new AppBar(
+                title: new Text("Flutter login demo"),
               ),
-              workersList(widget.api)
-            ]),
-          );
+              body: new Container(
+                child: new Center(
+                    child: FutureBuilder<Data>(
+                        future: _futureData,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError || snapshot.error != null) {
+                            return ErrorWidget('Error');
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasError) {
+                              return ErrorWidget('Error');
+                            }
+                            print(snapshot.connectionState);
+                            workers = snapshot.data.workers;
+                            return new Center(
+                                child: new RefreshIndicator(
+                              onRefresh: refreshData,
+                              child: new ListView.builder(
+                                  itemCount:
+                                      workers == null ? 0 : workers.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return new Container(
+                                        child: new Center(
+                                            child: new Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        new Card(
+                                            child: new Container(
+                                          child: new Text(
+                                              workers[index].transportName),
+                                          padding: const EdgeInsets.all(20),
+                                        ))
+                                      ],
+                                    )));
+                                  }),
+                            ));
+                            // return snapshot.data != null
+                            //     ? Text('${snapshot.data.toJson()}')
+                            //     : new Container();
+                          } else
+                            print(snapshot.connectionState);
+                          return CircularProgressIndicator();
+                        })),
+              ));
         } else
           return _buildWaitingScreen();
         break;
       default:
         return _buildWaitingScreen();
     }
-  }
-
-  Widget _showBoy() {
-    return new Hero(
-      tag: 'boy',
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 30.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 100.0,
-          child: Image.asset('assets/fboy.png'),
-        ),
-      ),
-    );
   }
 }
