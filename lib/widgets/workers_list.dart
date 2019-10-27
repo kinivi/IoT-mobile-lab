@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_ios_app/api/worker.dart';
-import '../api/api.dart';
+import 'package:my_ios_app/styles.dart';
 
 class WorkersList extends StatelessWidget {
-  Api api;
+  List<Worker> workers;
 
-  WorkersList(this.api);
+  WorkersList(this.workers);
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +19,31 @@ class WorkersList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               new Card(
-                  child: new Container(
-                child: new Text(workers[index].transportName),
-                padding: const EdgeInsets.all(20),
+                  child: new Column(
+                children: <Widget>[
+                  Image.network(workers[index].imageLink),
+                  Padding(
+                    padding: Styles.cardPadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          // Vechile Name
+                          Padding(
+                            padding: Styles.cardHeadPadding,
+                            child: Text(
+                              workers[index].transportName,
+                              style: Styles.primaryCardText,
+                              textAlign: TextAlign.center,
+                            
+                            ),
+                          ),
+                          Text("TransportID: " + workers[index].transportId.toString()),
+                          Text("MineID: " + workers[index].mineId.toString()),
+                        ],
+                      ),
+                    
+                  )
+                ],
               ))
             ],
           )));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_ios_app/styles.dart';
 import 'package:my_ios_app/widgets/workers_list.dart';
 import 'api/api.dart';
 import 'api/worker.dart';
@@ -28,23 +29,13 @@ class _HomePageState extends State<HomePage> {
   String _userName = "";
 
   List<Worker> workers = [];
-  Future<Data> _futureData;
 
-  Future<Data> _updateList() async {
+  Future<void> _updateList() async {
     //Get data from
-    Future<Data> data = widget.api.getTransports();
+    Data data = await widget.api.getTransports();
 
-    return data;
-
-    // setState(() {
-    //   //workers = data.workers;
-    //   print(data.toJson());
-    // });
-  }
-
-  Future<void> refreshData() {
     setState(() {
-      _futureData = _updateList();
+      workers = data.workers;
     });
   }
 
@@ -61,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         } else
           authStatus = AuthStatus.LOGGED_IN;
         // If user logged in, get api call for list request
-        _futureData = _updateList();
+        _updateList();
       });
     });
   }
@@ -111,53 +102,27 @@ class _HomePageState extends State<HomePage> {
         if (_userId.length > 0 && _userId != null) {
           return new Scaffold(
               appBar: new AppBar(
-                title: new Text("Flutter login demo"),
-              ),
+                  title: new Text("Flutter login demo"),
+                  actions: authStatus == AuthStatus.LOGGED_IN
+                      ? <Widget>[
+                          // action button
+                          IconButton(
+                            icon: Icon(Icons.exit_to_app),
+                            onPressed: () {
+                              _onSignedOut();
+                            },
+                          )
+                        ]
+                      : Container()),
               body: new Container(
                 child: new Center(
-                    child: FutureBuilder<Data>(
-                        future: _futureData,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError || snapshot.error != null) {
-                            return ErrorWidget('Error');
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return ErrorWidget('Error');
-                            }
-                            print(snapshot.connectionState);
-                            workers = snapshot.data.workers;
-                            return new Center(
-                                child: new RefreshIndicator(
-                              onRefresh: refreshData,
-                              child: new ListView.builder(
-                                  itemCount:
-                                      workers == null ? 0 : workers.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return new Container(
-                                        child: new Center(
-                                            child: new Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        new Card(
-                                            child: new Container(
-                                          child: new Text(
-                                              workers[index].transportName),
-                                          padding: const EdgeInsets.all(20),
-                                        ))
-                                      ],
-                                    )));
-                                  }),
-                            ));
-                            // return snapshot.data != null
-                            //     ? Text('${snapshot.data.toJson()}')
-                            //     : new Container();
-                          } else
-                            print(snapshot.connectionState);
-                          return CircularProgressIndicator();
-                        })),
+                    child: new RefreshIndicator(
+                        onRefresh: _updateList,
+                        child: new Padding(
+                            padding: Styles.homeListPadding,
+                            child: workers.length != 0
+                                ? WorkersList(workers)
+                                : CircularProgressIndicator()))),
               ));
         } else
           return _buildWaitingScreen();
