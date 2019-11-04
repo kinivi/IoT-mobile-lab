@@ -52,8 +52,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onConnectivityChange(ConnectivityResult result) {
-    if(result == ConnectivityResult.none)
-    _scaffoldKey.currentState.showSnackBar(_buildNoNetworkSnackBar());
+    if(result == ConnectivityResult.none) {
+      _scaffoldKey.currentState.showSnackBar(_buildNoNetworkSnackBar());
+    }
   }
 
   @override
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage> {
           return new Scaffold(
               key: _scaffoldKey,
               appBar: new AppBar(
-                  title: new Text("Flutter login demo"),
+                  title: new Text("Transport service"),
                   actions: authStatus == AuthStatus.LOGGED_IN
                       ? <Widget>[
                           // action button

@@ -4,17 +4,19 @@ import 'authentication.dart';
 import 'home_page.dart';
 
 void main() => runApp(new MyApp());
+Auth auth = new FireAuth();
+Api api = new SQLApi();
 
 class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Login Demo',
+      title: 'Login',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new HomePage(auth: new FireAuth(), api: new SQLApi())
+      home: new HomePage(auth: auth, api: api)
     );
   }
 }
