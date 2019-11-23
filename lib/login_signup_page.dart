@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'authentication.dart';
 import 'package:my_ios_app/styles.dart';
+import 'package:my_ios_app/strings.dart';
 
 // ENUM for togling form mode
 enum FormMode { LOGIN, SIGNUP }
@@ -109,11 +110,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   @override
   Widget build(BuildContext context) {
     //Get appropriate platform
-    //_isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    _isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Flutter login demo"),
+        title: new Text(Strings.appTitle),
       ),
       body: new Stack(
         children: <Widget>[
@@ -181,12 +182,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Email',
+            hintText: Strings.hintEmail,
             icon: new Icon(
               Icons.mail,
               color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) => value.isEmpty ? Strings.errorEmptyEmail : 
+          (RegExp( r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$").hasMatch(value) ? 
+              null : Strings.errorFormat),
         onSaved: (value) => _email = value.trim(),
       ),
     );
@@ -200,14 +203,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         obscureText: true,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Password',
+            hintText: Strings.hintPassword,
             icon: new Icon(
               Icons.lock,
               color: Colors.grey,
             )),
         validator: (value) {
-          if (value.isEmpty) return 'Password can\'t be empty';
-          if (value.length < 8) return 'Password is too short';
+          if (value.isEmpty) return Strings.errorEmptyPassword;
+          if (value.length < 8) return Strings.errorShortPassword;
           return null;
         },
         onSaved: (value) => _password = value.trim(),
@@ -223,14 +226,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         obscureText: false,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Name',
+            hintText: Strings.hintName,
             icon: new Icon(
               Icons.people,
               color: Colors.grey,
             )),
         validator: (value) {
-          if (value.isEmpty) return 'Name can\'t be empty';
-          if (value.length < 1) return 'Name is too short';
+          if (value.isEmpty) return Strings.errorEmptyName;
+          if (value.length < 1) return Strings.errorShortName;
           return null;
         },
         onSaved: (value) => _password = value.trim(),
@@ -247,14 +250,17 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         autofocus: false,
         keyboardType: TextInputType.phone,
         decoration: new InputDecoration(
-            hintText: 'Phone',
+            hintText: Strings.hintPhone,
             icon: new Icon(
               Icons.phone,
               color: Colors.grey,
             )),
         validator: (value) {
-          if (value.isEmpty) return 'Phone can\'t be empty';
-          return null;
+          if (value.isEmpty) return Strings.errorEmptyPhone;
+          if(RegExp( r"^\+?3?8?(0\d{9})$").hasMatch(value)){
+              return null;
+              
+          } else return Strings.errorFormat;
         },
         onSaved: (value) => _password = value.trim(),
       ),
@@ -270,8 +276,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           height: 42.0,
           color: Colors.blue,
           child: _formMode == FormMode.LOGIN
-              ? new Text('Login', style: Styles.primaryText)
-              : new Text('Create account', style: Styles.primaryText),
+              ? new Text(Strings.loginText, style: Styles.primaryText)
+              : new Text(Strings.createAccountText, style: Styles.primaryText),
           onPressed: _validateAndSubmit,
         ));
   }
@@ -279,8 +285,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   Widget _showSecondaryButton() {
     return new FlatButton(
       child: _formMode == FormMode.LOGIN
-          ? new Text('Create an account', style: Styles.secondaryText)
-          : new Text('Have an account? Sign in', style: Styles.secondaryText),
+          ? new Text(Strings.createAccountText, style: Styles.secondaryTextLogin)
+          : new Text(Strings.signinText, style: Styles.secondaryTextLogin),
       onPressed: _formMode == FormMode.LOGIN
           ? _changeFormToSignUp
           : _changeFormToLogin,
