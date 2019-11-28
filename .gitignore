@@ -98,3 +98,7 @@ Pods/
 ios/Flutter/Flutter.podspec
 
 .idea/
+
+.DS_Store
+
+.vscode/

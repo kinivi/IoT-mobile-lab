@@ -14,6 +14,7 @@ abstract class Styles {
   static const primaryText = TextStyle(fontSize: 20.0, color: Colors.white);
   static const primaryCardText = TextStyle(fontSize: 20.0, color: Colors.black);
   static const secondaryText = TextStyle(fontSize: 18.0, color: Colors.white);
+  static const secondaryTextLogin = TextStyle(fontSize: 18.0, color: Colors.black);
 
   static const errorText = TextStyle(
       fontSize: 13.0,
