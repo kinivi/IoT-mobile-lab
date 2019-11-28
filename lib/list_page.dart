@@ -79,19 +79,6 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
-        appBar: new AppBar(
-            title: new Text("Transport service"),
-            actions: widget.authStatus == AuthStatus.LOGGED_IN
-                ? <Widget>[
-                    // action button
-                    IconButton(
-                      icon: Icon(Icons.exit_to_app),
-                      onPressed: () {
-                        widget.onSignedOut();
-                      },
-                    )
-                  ]
-                : Container()),
         body: new Container(
           child: new Center(
               child: new RefreshIndicator(

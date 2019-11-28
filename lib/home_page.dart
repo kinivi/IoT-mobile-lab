@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_ios_app/list_page.dart';
+import 'package:my_ios_app/profile_page.dart';
+import 'package:my_ios_app/strings.dart';
 import 'api/api.dart';
 import 'authentication.dart';
 import 'login_signup_page.dart';
@@ -86,10 +88,42 @@ class _HomePageState extends State<HomePage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
-          return ListPage(
-              authStatus: authStatus,
-              onSignedOut: _onSignedOut,
-              api: widget.api);
+          return DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                actions: authStatus == AuthStatus.LOGGED_IN
+                    ? <Widget>[
+                        // action button
+                        IconButton(
+                          icon: Icon(Icons.exit_to_app),
+                          onPressed: () {
+                            _onSignedOut();
+                          },
+                        )
+                      ]
+                    : Container(),
+                bottom: TabBar(
+                  tabs: [
+                    Tab(icon: Icon(Icons.map)),
+                    Tab(icon: Icon(Icons.timeline)),
+                    Tab(icon: Icon(Icons.settings)),
+                  ],
+                ),
+                title: Text(Strings.appTitle),
+              ),
+              body: TabBarView(
+                children: [
+                  ListPage(
+                      authStatus: authStatus,
+                      onSignedOut: _onSignedOut,
+                      api: widget.api),
+                  Icon(Icons.timeline),
+                  ProfilePage(auth: widget.auth)
+                ],
+              ),
+            ),
+          );
         } else
           return _buildWaitingScreen();
         break;

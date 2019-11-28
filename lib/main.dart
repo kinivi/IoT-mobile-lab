@@ -9,15 +9,13 @@ Auth auth = new FireAuth();
 Api api = new SQLApi();
 
 class MyApp extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: Strings.appTitle,
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: new HomePage(auth: auth, api: api)
-    );
+        title: Strings.appTitle,
+        theme: new ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: new HomePage(auth: auth, api: api));
   }
 }
