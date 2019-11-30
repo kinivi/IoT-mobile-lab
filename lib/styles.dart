@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class Styles {
+  static const avatarRadius = 100.0;
+  static const clipAvatarSize = 190.0;
+
   static const headlineText = TextStyle(
     color: Color.fromRGBO(0, 0, 0, 0.8),
     fontFamily: 'NotoSans',

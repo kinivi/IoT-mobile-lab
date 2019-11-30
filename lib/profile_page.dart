@@ -27,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _name = "";
   String _email = "";
   String _profileURL;
+  String _stockURL = "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60";
 
   TextEditingController _emailController;
   TextEditingController _nameController;
@@ -77,7 +78,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
       print(url);
       setState(() {
-        print("Profile Picture uploaded");
         _isSaving = false;
         _profileURL = url;
 
@@ -147,12 +147,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
     Widget _showAvatar() {
       return CircleAvatar(
-        radius: 100,
+        radius: Styles.avatarRadius,
         backgroundColor: Colors.black87,
         child: ClipOval(
           child: new SizedBox(
-            width: 190.0,
-            height: 190.0,
+            width: Styles.clipAvatarSize,
+            height: Styles.clipAvatarSize,
             child: (_image != null)
                 ? Image.file(
                     _image,
@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 : Image.network(
                     _profileURL != null
                         ? _profileURL
-                        : "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                        : _stockURL,
                     fit: BoxFit.fill,
                   ),
           ),
@@ -189,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       )),
                   validator: (value) => value.isEmpty
                       ? Strings.errorEmptyEmail
-                      : (RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+                      : (RegExp(Strings.regexpEmail)
                               .hasMatch(value)
                           ? null
                           : Strings.errorFormat),
@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
         body: Container(
-            padding: EdgeInsets.all(16.0),
+            padding: Styles.cardPadding,
             child: new Form(
               key: _formKey,
               child: new ListView(
