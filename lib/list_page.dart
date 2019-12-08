@@ -36,6 +36,12 @@ class _ListPageState extends State<ListPage> {
     }
   }
 
+  @override
+  void reassemble() {
+    super.reassemble();
+    print("Reassemble");
+  }
+
   Future<void> _updateList() async {
     Data data;
     //Get data from
@@ -49,6 +55,19 @@ class _ListPageState extends State<ListPage> {
     setState(() {
       workers = data.workers;
     });
+  }
+
+  void _addNewTransport() async {
+    Map result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => new AddPage(api: widget.api),
+        ));
+    if(result["result_code"] == 200 ) {
+      _updateList();
+    } else {
+      _scaffoldKey.currentState.showSnackBar(_buildErrorSnackBar());
+    }
   }
 
   void onConnectivityChange(ConnectivityResult result) {
@@ -78,13 +97,7 @@ class _ListPageState extends State<ListPage> {
 
   Widget _showFloatingButton() {
     return new FloatingActionButton(
-      onPressed: () => {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => new AddPage(api: widget.api),
-            ))
-      },
+      onPressed: _addNewTransport,
       child: Icon(Icons.add),
       backgroundColor: Colors.blue,
     );

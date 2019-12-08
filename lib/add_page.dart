@@ -33,10 +33,10 @@ class _AddPageState extends State<AddPage> {
 
     //Generate ID and post new worker
     newWorker.id = Random().nextInt(10000);
-    await widget.api.postTransport(newWorker);
+    int code = await widget.api.postTransport(newWorker);
 
-    //Back to previous screen
-    Navigator.pop(context);
+    //Back to previous screen and send results of saving
+    Navigator.pop(context, {"result_code": code});
   }
 
   bool _validateAndSave() {
