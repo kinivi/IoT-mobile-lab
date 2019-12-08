@@ -17,5 +17,6 @@ abstract class Strings {
    static const String errorEmptyName = 'Name can\'t be empty';		
    static const String loginText = 'Login';
    static const String detailsPageTitle = 'Transport details';
+   static const String addPageTitle = 'Add new Transport';
    static const String regexpEmail = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 }

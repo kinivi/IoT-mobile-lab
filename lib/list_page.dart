@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:my_ios_app/add_page.dart';
 import 'package:my_ios_app/home_page.dart';
 import 'package:my_ios_app/styles.dart';
 import 'package:my_ios_app/widgets/workers_list.dart';
@@ -75,20 +76,36 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
+  Widget _showFloatingButton() {
+    return new FloatingActionButton(
+      onPressed: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => new AddPage(api: widget.api),
+            ))
+      },
+      child: Icon(Icons.add),
+      backgroundColor: Colors.blue,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: _scaffoldKey,
-        body: new Container(
-          child: new Center(
-              child: new RefreshIndicator(
-                  onRefresh: _updateList,
-                  child: new Padding(
-                      padding: Styles.homeListPadding,
-                      child: workers.length != 0
-                          ? WorkersList(workers)
-                          : CircularProgressIndicator()))),
-        ));
+      key: _scaffoldKey,
+      body: new Container(
+        child: new Center(
+            child: new RefreshIndicator(
+                onRefresh: _updateList,
+                child: new Padding(
+                    padding: Styles.homeListPadding,
+                    child: workers.length != 0
+                        ? WorkersList(workers)
+                        : CircularProgressIndicator()))),
+      ),
+      floatingActionButton: _showFloatingButton(),
+    );
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:my_ios_app/api/worker.dart';
 import 'dart:convert';
 import '../config/google_api_config.dart';
@@ -6,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 abstract class Api {
   Future<Data> getTransports();
-  Future<String> postTransport(Transport transport);
+  Future<int> postTransport(Worker worker);
 }
 
 class SQLApi implements Api {
@@ -20,8 +21,11 @@ class SQLApi implements Api {
     return transportFromJson(response.body).data;
   }
   
-  Future<String> postTransport(Transport transport) async {
-    return "";
+  Future<int> postTransport(Worker worker) async {
+    final json = worker.toJson();
+    final response = await http.post(api_url, headers: {'Content-type' : 'application/json', },  body: jsonEncode(json));
+    print(response.toString());
+    return response.statusCode;
   }
 }
 
